@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Sentimentos | Marketing Insights</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --neutral: #ca8a04;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        main {
+            flex: 1;
+            max-width: 800px;
+            width: 90%;
+            margin: 2rem auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #f1f5f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .badge.Positivo { background-color: #dcfce7; color: var(--success); }
+        .badge.Negativo { background-color: #fee2e2; color: var(--danger); }
+        .badge.Neutro { background-color: #fef9c3; color: var(--neutral); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-top: 1px solid #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Analisador de Sentimentos de Clientes</h1>
+        <p>Ferramenta de Processamento de Linguagem Natural (PLN)</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Novo Comentário</h2>
+            <form method="POST" action="/">
+                <label for="comentario">Digite ou cole o feedback do cliente:</label>
+                <textarea id="comentario" name="comentario" placeholder="Ex: O atendimento foi excelente, mas a entrega atrasou um pouco..." required></textarea>
+                <button type="submit">Analisar Sentimento</button>
+            </form>
+
+            {% if resultado %}
+            <div class="result-box">
+                <h3>Resultado da Análise</h3>
+                <p><strong>Comentário:</strong> "{{ resultado.texto }}"</p>
+                <p><strong>Sentimento Identificado:</strong> <span class="badge {{ resultado.sentimento }}">{{ resultado.sentimento }}</span></p>
+                <p><strong>Polaridade (Escore):</strong> {{ resultado.polaridade }}</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <section class="card">
+            <h2>Histórico Recente</h2>
+            {% if historico %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Comentário</th>
+                        <th>Sentimento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in historico %}
+                    <tr>
+                        <td>{{ item[3] }}</td>
+                        <td>{{ item[0] }}</td>
+                        <td><span class="badge {{ item[1] }}">{{ item[1] }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color: var(--text-muted);">Nenhum comentário analisado até o momento.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 - Módulo de PLN e Inteligência de Mercado</p>
+    </footer>
+
+</body>
+</html>
